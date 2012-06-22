@@ -44,6 +44,13 @@ AM_CONDITIONAL([HAVE_E], [test x$EPREFIX != x])
 
 AM_CONDITIONAL([HAVE_XBMC], [test -f /usr/bin/xbmc])
 
+PKG_CHECK_MODULES([XFCE], [xfce4-session-2.0],
+  XFCEPREFIX="`$PKG_CONFIG --variable=exec_prefix xfce4-session-2.0`"
+  AC_SUBST(XFCEPREFIX),
+  true
+)
+AM_CONDITIONAL([HAVE_XFCE], [test x$XFCEPREFIX != x])
+
 AC_OUTPUT([
 units/system/user-session@.service
 units/user/dbus.socket
@@ -52,4 +59,7 @@ units/user/e17.target
 units/user/enlightenment.service
 units/user/xbmc.target
 units/user/xbmc.service
+units/user/xfce4-session.service
+units/user/xfce4.target
+units/user/xfwm4.service
 ])

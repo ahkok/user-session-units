@@ -9,13 +9,9 @@ AC_CONFIG_FILES([Makefile])
 # Checks for programs.
 PKG_CHECK_MODULES([SYSTEMD], [systemd])
 
-
-# Checks for libraries.
-
-# Checks for header files.
-
-# Checks for typedefs, structures, and compiler characteristics.
-
-# Checks for library functions.
+SYSTEMDSYSTEMUNITDIR="`$PKG_CONFIG --variable=systemdsystemunitdir systemd`"
+AC_SUBST(SYSTEMDSYSTEMUNITDIR)
+SYSTEMDUSERUNITDIR="`$PKG_CONFIG --variable=systemduserunitdir systemd`"
+AC_SUBST(SYSTEMDUSERUNITDIR)
 
 AC_OUTPUT

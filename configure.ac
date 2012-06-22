@@ -6,12 +6,18 @@ AC_INIT([user-session-units], [1], [auke-jan.h.kok@intel.com])
 AM_INIT_AUTOMAKE([])
 AC_CONFIG_FILES([Makefile])
 
-# Checks for programs.
+# Systemd is required, obviously
 PKG_CHECK_MODULES([SYSTEMD], [systemd])
 
 SYSTEMDSYSTEMUNITDIR="`$PKG_CONFIG --variable=systemdsystemunitdir systemd`"
 AC_SUBST(SYSTEMDSYSTEMUNITDIR)
 SYSTEMDUSERUNITDIR="`$PKG_CONFIG --variable=systemduserunitdir systemd`"
 AC_SUBST(SYSTEMDUSERUNITDIR)
+
+# Check for dbus daemon path for the session bus
+PKG_CHECK_MODULES([DBUS], [dbus-1])
+
+DBUSDAEMONDIR="`$PKG_CONFIG --variable=daemondir dbus-1`"
+AC_SUBST(DBUSDAEMONDIR)
 
 AC_OUTPUT

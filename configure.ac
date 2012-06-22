@@ -42,7 +42,9 @@ PKG_CHECK_MODULES([ENLIGHTENMENT], [enlightenment],
 )
 AM_CONDITIONAL([HAVE_E], [test x$EPREFIX != x])
 
+AC_MSG_CHECKING(for XBMC)
 AM_CONDITIONAL([HAVE_XBMC], [test -f /usr/bin/xbmc])
+AC_MSG_RESULT($HAVE_XBMC)
 
 PKG_CHECK_MODULES([XFCE], [xfce4-session-2.0],
   XFCEPREFIX="`$PKG_CONFIG --variable=exec_prefix xfce4-session-2.0`"

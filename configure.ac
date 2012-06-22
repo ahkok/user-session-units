@@ -18,6 +18,11 @@ AC_SUBST(SYSTEMDUSERUNITDIR)
 PKG_CHECK_MODULES([DBUS], [dbus-1])
 
 DBUSDAEMONDIR="`$PKG_CONFIG --variable=daemondir dbus-1`"
+DBUSPREFIX="`$PKG_CONFIG --variable=prefix dbus-1`"
 AC_SUBST(DBUSDAEMONDIR)
+AC_SUBST(DBUSPREFIX)
 
-AC_OUTPUT
+AC_OUTPUT([
+units/user/dbus.socket
+units/user/dbus.service
+])

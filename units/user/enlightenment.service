@@ -1,0 +1,9 @@
+
+[Unit]
+Description=The enlightenment Window Manager
+After=xorg.target
+Requires=dbus.socket
+
+[Service]
+ExecStart=/usr/bin/enlightenment_start
+

@@ -1,0 +1,5 @@
+
+[Unit]
+Description=XBMC
+Wants=xorg.target dbus.socket
+

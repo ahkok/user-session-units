@@ -13,6 +13,8 @@ SYSTEMDSYSTEMUNITDIR="`$PKG_CONFIG --variable=systemdsystemunitdir systemd`"
 AC_SUBST(SYSTEMDSYSTEMUNITDIR)
 SYSTEMDUSERUNITDIR="`$PKG_CONFIG --variable=systemduserunitdir systemd`"
 AC_SUBST(SYSTEMDUSERUNITDIR)
+SYSTEMDUTILDIR="`$PKG_CONFIG --variable=systemdutildir systemd`"
+AC_SUBST(SYSTEMDUTILDIR)
 
 # Check for dbus daemon path for the session bus
 PKG_CHECK_MODULES([DBUS], [dbus-1])
@@ -23,6 +25,7 @@ AC_SUBST(DBUSDAEMONDIR)
 AC_SUBST(DBUSPREFIX)
 
 AC_OUTPUT([
+units/system/user-session@.service
 units/user/dbus.socket
 units/user/dbus.service
 ])

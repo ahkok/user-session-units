@@ -15,7 +15,7 @@ PAMName=login
 ControlGroup=%R/user/%I/shared cpu:/
 ControlGroupModify=yes
 Type=notify
-ExecStart=-/usr/lib/systemd/systemd --user
+ExecStart=-@SYSTEMDUTILDIR@/systemd --user
 Environment=DISPLAY=:0
 Environment=XDG_RUNTIME_DIR=/run/user/%I
 Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/%I/dbus/user_bus_socket

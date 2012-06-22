@@ -16,6 +16,16 @@ AC_SUBST(SYSTEMDUSERUNITDIR)
 SYSTEMDUTILDIR="`$PKG_CONFIG --variable=systemdutildir systemd`"
 AC_SUBST(SYSTEMDUTILDIR)
 
+# test for xorg-launch-helper
+AC_MSG_CHECKING(for xorg-launch-helper)
+if test -f "$SYSTEMDUSERUNITDIR/xorg.target" ; then
+  result=yes
+else
+  AC_ERROR([xorg-launch-helper is required for most of the units])
+  result=no
+fi
+AC_MSG_RESULT($result)
+
 # Check for dbus daemon path for the session bus
 PKG_CHECK_MODULES([DBUS], [dbus-1])
 
@@ -24,8 +34,18 @@ DBUSPREFIX="`$PKG_CONFIG --variable=prefix dbus-1`"
 AC_SUBST(DBUSDAEMONDIR)
 AC_SUBST(DBUSPREFIX)
 
+# these are the desktops:
+PKG_CHECK_MODULES([ENLIGHTENMENT], [enlightenment],
+  EPREFIX="`$PKG_CONFIG --variable=exec_prefix enlightenment`"
+  AC_SUBST(EPREFIX),
+  true
+)
+AM_CONDITIONAL([HAVE_E], [test x$EPREFIX != x])
+
 AC_OUTPUT([
 units/system/user-session@.service
 units/user/dbus.socket
 units/user/dbus.service
+units/user/e17.target
+units/user/enlightenment.service
 ])

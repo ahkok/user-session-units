@@ -5,5 +5,5 @@ After=xorg.target
 Requires=dbus.socket
 
 [Service]
-ExecStart=/usr/bin/enlightenment_start
+ExecStart=@EPREFIX@/bin/enlightenment_start
 

@@ -42,10 +42,14 @@ PKG_CHECK_MODULES([ENLIGHTENMENT], [enlightenment],
 )
 AM_CONDITIONAL([HAVE_E], [test x$EPREFIX != x])
 
+AM_CONDITIONAL([HAVE_XBMC], [test -f /usr/bin/xbmc])
+
 AC_OUTPUT([
 units/system/user-session@.service
 units/user/dbus.socket
 units/user/dbus.service
 units/user/e17.target
 units/user/enlightenment.service
+units/user/xbmc.target
+units/user/xbmc.service
 ])

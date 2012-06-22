@@ -1,4 +1,6 @@
 
+EXTRA_DIST = patches/dbus-fix-sba-for-dbus-activation.patch
+
 systemdsystemunitdir = @SYSTEMDSYSTEMUNITDIR@
 systemduserunitdir = @SYSTEMDUSERUNITDIR@
 

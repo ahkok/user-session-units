@@ -1,9 +1,0 @@
-
-[Unit]
-Description=Xfce Window Manager Daemon 
-After=xorg.target
-
-[Service]
-Restart=always
-RestartSec=1
-ExecStart=/usr/bin/xfwm4

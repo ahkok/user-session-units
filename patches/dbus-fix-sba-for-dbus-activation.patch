@@ -1,0 +1,142 @@
+diff -uNr dbus-1.6.0/dbus/dbus-server-unix.c dbus-1.6.0-2/dbus/dbus-server-unix.c
+--- dbus-1.6.0/dbus/dbus-server-unix.c	2012-03-28 19:43:32.000000000 +0200
++++ dbus-1.6.0-2/dbus/dbus-server-unix.c	2012-06-12 15:00:27.100431004 +0200
+@@ -149,7 +149,7 @@
+     }
+   else if (strcmp (method, "systemd") == 0)
+     {
+-      int n, *fds;
++      int i, n, *fds;
+       DBusString address;
+ 
+       n = _dbus_listen_systemd_sockets (&fds, error);
+@@ -159,27 +159,39 @@
+           return DBUS_SERVER_LISTEN_DID_NOT_CONNECT;
+         }
+ 
+-      _dbus_string_init_const (&address, "systemd:");
++      if(!_dbus_string_init(&address))
++          goto oom;
+ 
+-      *server_p = _dbus_server_new_for_socket (fds, n, &address, NULL);
+-      if (*server_p == NULL)
++      for (i = 0; i < n; i++)
+         {
+-          int i;
+-
+-          for (i = 0; i < n; i++)
++          if ( i > 0)
+             {
+-              _dbus_close_socket (fds[i], NULL);
++              if(!_dbus_string_append (&address, ";"))
++                goto oom;
+             }
+-          dbus_free (fds);
+-
+-          dbus_set_error (error, DBUS_ERROR_NO_MEMORY, NULL);
+-          return DBUS_SERVER_LISTEN_DID_NOT_CONNECT;
++          if(!_dbus_append_address_from_socket (fds[i], &address))
++            goto oom;
+         }
+ 
++      *server_p = _dbus_server_new_for_socket (fds, n, &address, NULL);
++      if (*server_p == NULL)
++        goto oom;
++
+       dbus_free (fds);
+ 
+       return DBUS_SERVER_LISTEN_OK;
+-	}
++  oom:
++      dbus_set_error (error, DBUS_ERROR_NO_MEMORY, NULL);
++      for (i = 0; i < n; i++)
++        {
++          _dbus_close_socket (fds[i], NULL);
++        }
++      dbus_free (fds);
++      _dbus_string_free (&address);
++
++      dbus_set_error (error, DBUS_ERROR_NO_MEMORY, NULL);
++      return DBUS_SERVER_LISTEN_DID_NOT_CONNECT;
++    }
+ #ifdef DBUS_ENABLE_LAUNCHD
+   else if (strcmp (method, "launchd") == 0)
+     {
+diff -uNr dbus-1.6.0/dbus/dbus-sysdeps-unix.c dbus-1.6.0-2/dbus/dbus-sysdeps-unix.c
+--- dbus-1.6.0/dbus/dbus-sysdeps-unix.c	2012-06-05 13:17:45.000000000 +0200
++++ dbus-1.6.0-2/dbus/dbus-sysdeps-unix.c	2012-06-13 22:39:58.558828789 +0200
+@@ -4086,4 +4086,61 @@
+     close (i);
+ }
+ 
++/**
++ * Read the addres from the socket and append it to the string
++ *
++ * @param fd the socket
++ * @param address
++ */
++dbus_bool_t _dbus_append_address_from_socket (int fd, DBusString *address)
++{
++  struct sockaddr_storage socket;
++  struct sockaddr_in *inet_addr = (struct sockaddr_in*)&socket;
++  struct sockaddr_in6 *inet6_addr = (struct sockaddr_in6*)&socket;
++  struct sockaddr_un *unix_addr = (struct sockaddr_un*)&socket;
++  char host[71];
++  char hostip[INET6_ADDRSTRLEN];
++  int size = sizeof(struct sockaddr_storage);
++
++  getsockname(fd, (struct sockaddr*)&socket, &size);
++
++  switch(socket.ss_family)
++    {
++    case AF_UNIX:
++      if (unix_addr->sun_path[0]=='\0')
++        {
++          if (!_dbus_string_append (address, "unix:abstract=") ||
++              !_dbus_string_append (address, &(unix_addr->sun_path[1])))
++            return FALSE;
++        }
++      else
++        {
++          if (!_dbus_string_append (address, "unix:path=") ||
++              !_dbus_string_append (address, unix_addr->sun_path))
++            return FALSE;
++        }
++      break;
++    case AF_INET:
++      if(inet_ntop(AF_INET, inet_addr, hostip, INET6_ADDRSTRLEN))
++        snprintf(host, 71, "tcp:family=ipv4,host=%s,port=%hu",
++                 hostip, ntohs(inet_addr->sin_port));
++      else
++        return FALSE;
++      if(!_dbus_string_append (address, host))
++        return FALSE;
++    case AF_INET6:
++      if(inet_ntop(AF_INET6, inet_addr, hostip, INET6_ADDRSTRLEN))
++        snprintf(host, 71, "tcp:family=ipv6,host=%s,port=%hu",
++                 hostip, ntohs(inet_addr->sin_port));
++      else
++        return FALSE;
++      if(!_dbus_string_append (address, host))
++        return FALSE;
++      break;
++    default:
++      return FALSE;
++    }
++  return TRUE;
++}
++
+ /* tests in dbus-sysdeps-util.c */
+diff -uNr dbus-1.6.0/dbus/dbus-sysdeps-unix.h dbus-1.6.0-2/dbus/dbus-sysdeps-unix.h
+--- dbus-1.6.0/dbus/dbus-sysdeps-unix.h	2012-06-05 13:17:45.000000000 +0200
++++ dbus-1.6.0-2/dbus/dbus-sysdeps-unix.h	2012-06-12 14:23:28.748164224 +0200
+@@ -138,6 +138,8 @@
+ 
+ void _dbus_close_all (void);
+ 
++dbus_bool_t _dbus_append_address_from_socket (int fd, DBusString *address);
++
+ /** @} */
+ 
+ DBUS_END_DECLS
+Binary files dbus-1.6.0/.swp and dbus-1.6.0-2/.swp differ

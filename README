@@ -48,6 +48,15 @@ Prerequisites:
   performs this task and installs several unit files that are required
   for most of the units in this project to function.
 
+  dbus - current dbus code sends a malformed DBUS_SESSION_BUS_ADDRESS
+  to any dbus-activated unit under the systemd user session. A patch
+  is pending upstream to resolve the issue. Until this is accepted,
+  you need to either apply this patch manually to dbus yourself, or
+  live without dbus activation. For reference, the bug is here:
+  https://bugs.freedesktop.org/show_bug.cgi?id=50962. A copy of the
+  last-good version of the patch can be found in the /patches/
+  folder in this source tree.
+
 
 Installation:
 

@@ -2,7 +2,6 @@
 [Unit]
 Description=Xfce4 Session Manager
 After=xorg.target
-After=xfconfd.service
 
 [Service]
 ExecStart=/usr/bin/xfce4-session

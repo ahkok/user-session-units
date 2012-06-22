@@ -1,0 +1,77 @@
+user-session-units
+==================
+
+This package contains several systemd unit files related to the systemd
+user session, aka `systemd --user`. The goal of this package is to
+provide an easy way for people to collect, share and deploy systemd
+user session installations and help test the systemd user session
+core code.
+
+
+Content:
+
+In the "units" folder, you will find several unit files for the system
+domain and the user session. The most critical ones are:
+
+  system/user-session@.service - This unit creates an auto-login
+  mechanism in systemd. This is the unit that "starts" a
+  user session. It can either be run manually: `systemd start
+  user-session@joe.service`. Or one could make this happen at boot
+  time automatically with `systemctl enable user-session@joe.service`.
+
+  user/dbus.socket and user/dbus.service - This creates the dbus
+  session bus for the systemd user session. The session bus should
+  live under XDG_RUNTIME_DIR, and so the user-session@.service refers
+  to this bus address. This is needed to make dbus activation under
+  the user session work.
+
+  default.target - not packaged. This symlink is pointing to the target
+  unit file that should be started by systemd --user. If invalid, empty
+  or missing, nothing will happen when you start the user session.
+
+  other - various example units are packaged for several popular Linux
+  desktop sessions. They are examples, which work for the author,
+  but may not necessarily function properly on other distributions.
+
+
+Prerequisites:
+
+  systemd - required. This package uses the pkg-config file from
+  systemd to make sure items are installed in the proper locations.
+
+  PAM needs to be enabled in systemd. Your system should have
+  `pam_systemd.so` used in the `login` or `system-auth` files in
+  /etc/pam.d.
+
+  xorg-launch-helper - currently required. Xorg by itself does not
+  run properly as a systemd service. The xorg-launch-helper project
+  performs this task and installs several unit files that are required
+  for most of the units in this project to function.
+
+
+Installation:
+
+  Just run the usual `configure --prefix...; make; make install`.
+
+  Building from git requires running `./autogen.sh` first.
+
+
+Configuration:
+
+There are two things that need to be done manually by the SA to enable
+and configure the user session properly.
+
+1) Choose the default target (desktop).
+
+Systemd has various places where this choice can be set. The
+distribution should place a `default.target` symlink in
+${prefix}/systemd/user/. The SA should place the symlink in
+${sysconfdir}/systemd/user/, and last, the user themselves can
+override those two locations by creating the `default.target` symlink
+in ~/.config/systemd/user.
+
+2) Enable auto-logon/start user session at boot time (optional).
+
+This should simply be done by the SA running: `systemctl enable
+user-session@joe.service`.
+

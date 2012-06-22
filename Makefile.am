@@ -1,0 +1,4 @@
+
+systemdsystemunitdir = @SYSTEMDSYSTEMUNITDIR@
+systemduserunitdir = @SYSTEMDUSERUNITDIR@
+

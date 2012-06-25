@@ -5,5 +5,7 @@ After=xorg.target
 Requires=dbus.socket
 
 [Service]
-ExecStart=@EPREFIX@/bin/enlightenment_start
+ExecStart=@E_PROG@
 
+[Install]
+WantedBy=e17.target

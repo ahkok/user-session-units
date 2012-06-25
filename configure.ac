@@ -29,36 +29,32 @@ AC_MSG_RESULT($result)
 # Check for dbus daemon path for the session bus
 PKG_CHECK_MODULES([DBUS], [dbus-1])
 
-DBUSDAEMONDIR="`$PKG_CONFIG --variable=daemondir dbus-1`"
 DBUSPREFIX="`$PKG_CONFIG --variable=prefix dbus-1`"
 AC_SUBST(DBUSDAEMONDIR)
 AC_SUBST(DBUSPREFIX)
 
 # these are the desktops:
-PKG_CHECK_MODULES([ENLIGHTENMENT], [enlightenment],
-  EPREFIX="`$PKG_CONFIG --variable=exec_prefix enlightenment`"
-  AC_SUBST(EPREFIX),
-  true
-)
-AM_CONDITIONAL([HAVE_E], [test x$EPREFIX != x])
+AC_CHECK_PROG([E_PROG], [enlightenment_start], [`which enlightenment_start`], [], [], [])
+AC_SUBST(E_PROG)
+AM_CONDITIONAL([HAVE_E], [test -n "$E_PROG"])
 
-AC_MSG_CHECKING(for XBMC)
-AM_CONDITIONAL([HAVE_XBMC], [test -f /usr/bin/xbmc])
-AC_MSG_RESULT($HAVE_XBMC)
+AC_CHECK_PROG([XFCE_PROG], [xfce4-session], [`which xfce4-session`], [], [], [])
+AC_CHECK_PROG([XFWM_PROG], [xfwm4], [`which xfwm4`], [], [], [])
+AC_SUBST(XFCE_PROG)
+AC_SUBST(XFWM_PROG)
+AM_CONDITIONAL([HAVE_XFCE], [test -n "$XFCE_PROG"])
 
-PKG_CHECK_MODULES([XFCE], [xfce4-session-2.0],
-  XFCEPREFIX="`$PKG_CONFIG --variable=exec_prefix xfce4-session-2.0`"
-  AC_SUBST(XFCEPREFIX),
-  true
-)
-AM_CONDITIONAL([HAVE_XFCE], [test x$XFCEPREFIX != x])
+AC_CHECK_PROG([XBMC_PROG], [xbmc-standalone], [`which xbmc-standalone`], [], [], [])
+AC_SUBST(XBMC_PROG)
+AM_CONDITIONAL([HAVE_XBMC], [test -n "$XBMC_PROG"])
 
-PKG_CHECK_MODULES([GNOME], [gnome-desktop-2.0],
-  GNOMEPREFIX="`$PKG_CONFIG --variable=exec_prefix gnome-desktop-2.0`"
-  AC_SUBST(GNOMEPREFIX),
-  true
-)
-AM_CONDITIONAL([HAVE_GNOME], [test x$GNOMEPREFIX != x])
+AC_CHECK_PROG([GNOME_PROG], [gnome-session], [`which gnome-session`], [], [], [])
+AC_SUBST(GNOME_PROG)
+AM_CONDITIONAL([HAVE_GNOME], [test -n "$GNOME_PROG"])
+
+AC_CHECK_PROG([KDE_PROG], [startkde], [`which startkde`], [], [], [])
+AC_SUBST(KDE_PROG)
+AM_CONDITIONAL([HAVE_KDE], [test -n "$KDE_PROG"])
 
 AC_OUTPUT([
 units/system/user-session@.service
@@ -73,4 +69,6 @@ units/user/xfce4.target
 units/user/xfwm4.service
 units/user/gnome.target
 units/user/gnome-session.service
+units/user/kde.target
+units/user/startkde.service
 ])

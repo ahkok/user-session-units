@@ -1,0 +1,11 @@
+
+[Unit]
+Description=The KDE start agent
+After=xorg.target
+Requires=dbus.socket
+
+[Service]
+ExecStart=@KDE_PROG@
+
+[Install]
+WantedBy=kde.target

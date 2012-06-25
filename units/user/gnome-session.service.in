@@ -5,5 +5,7 @@ After=xorg.target
 Requires=dbus.socket
 
 [Service]
-ExecStart=$GNOMEPREFIX@/bin/gnome-session
+ExecStart=@GNOME_PROG@
 
+[Install]
+WantedBy=gnome.target

@@ -1,0 +1,12 @@
+TODO
+====
+
+1. Obsolete this package entirely
+ a) user-session@.service should probably end up back in systemd.
+ b) xorg-launch-helper should be obsolete once XOrg becomes properly
+    socket-activated. At which point we should ship the service files
+    from xorg-launch-helper in xorg-server itself.
+ c) Same for wayland.
+ d) All the desktop-specific service files should be shipped by
+    upstream projects.
+

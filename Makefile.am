@@ -34,6 +34,12 @@ systemduserunit_DATA += \
 	units/user/gnome.target \
 	units/user/gnome-session.service
 endif
+if HAVE_KDE
+systemduserunit_DATA += \
+	units/user/kde.target \
+	units/user/startkde.service
+endif
+
 
 
 install-data-hook:
@@ -53,5 +59,9 @@ endif
 if HAVE_GNOME
 	$(mkinstalldirs) $(DESTDIR)$(SYSTEMDUSERUNITDIR)/gnome.target.wants
 	ln -sf ../gnome-session.service $(DESTDIR)$(SYSTEMDUSERUNITDIR)/gnome.target.wants/
+endif
+if HAVE_KDE
+	$(mkinstalldirs) $(DESTDIR)$(SYSTEMDUSERUNITDIR)/kde.target.wants
+	ln -sf ../startkde.service $(DESTDIR)$(SYSTEMDUSERUNITDIR)/kde.target.wants/
 endif
 

@@ -51,7 +51,7 @@ if HAVE_XFCE
 	ln -sf ../xfwm4.service $(DESTDIR)$(SYSTEMDUSERUNITDIR)/xfce4.target.wants/
 endif
 if HAVE_GNOME
-	(mkinstalldirs) $(DESTDIR)$(SYSTEMDUSERUNITDIR)/gnome.target.wants
+	$(mkinstalldirs) $(DESTDIR)$(SYSTEMDUSERUNITDIR)/gnome.target.wants
 	ln -sf ../gnome-session.service $(DESTDIR)$(SYSTEMDUSERUNITDIR)/gnome.target.wants/
 endif
 

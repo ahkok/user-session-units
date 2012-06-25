@@ -32,7 +32,7 @@ endif
 if HAVE_GNOME
 systemduserunit_DATA += \
 	units/user/gnome.target \
-	units/user/gnome-session
+	units/user/gnome-session.service
 endif
 
 

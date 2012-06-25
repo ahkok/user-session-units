@@ -1,0 +1,9 @@
+
+[Unit]
+Description=The GNOME session manager
+After=xorg.target
+Requires=dbus.socket
+
+[Service]
+ExecStart=$GNOMEPREFIX@/bin/gnome-session
+

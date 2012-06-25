@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([user-session-units], [1], [auke-jan.h.kok@intel.com])
+AC_INIT([user-session-units], [2], [auke-jan.h.kok@intel.com])
 AM_INIT_AUTOMAKE([])
 AC_CONFIG_FILES([Makefile])
 
@@ -53,6 +53,13 @@ PKG_CHECK_MODULES([XFCE], [xfce4-session-2.0],
 )
 AM_CONDITIONAL([HAVE_XFCE], [test x$XFCEPREFIX != x])
 
+PKG_CHECK_MODULES([GNOME], [gnome-desktop-2.0],
+  GNOMEPREFIX="`$PKG_CONFIG --variable=exec_prefix gnome-desktop-2.0`"
+  AC_SUBST(GNOMEPREFIX),
+  true
+)
+AM_CONDITIONAL([HAVE_GNOME], [test x$GNOMEPREFIX != x])
+
 AC_OUTPUT([
 units/system/user-session@.service
 units/user/dbus.socket
@@ -64,4 +71,6 @@ units/user/xbmc.service
 units/user/xfce4-session.service
 units/user/xfce4.target
 units/user/xfwm4.service
+units/user/gnome.target
+units/user/gnome-session.service
 ])

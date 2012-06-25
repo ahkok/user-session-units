@@ -29,6 +29,11 @@ systemduserunit_DATA += \
 	units/user/xfwm4.service \
 	units/user/xfce4.target
 endif
+if HAVE_GNOME
+systemduserunit_DATA += \
+	units/user/gnome.target \
+	units/user/gnome-session
+endif
 
 
 install-data-hook:
@@ -44,5 +49,9 @@ if HAVE_XFCE
 	$(mkinstalldirs) $(DESTDIR)$(SYSTEMDUSERUNITDIR)/xfce4.target.wants
 	ln -sf ../xfce4-session.service $(DESTDIR)$(SYSTEMDUSERUNITDIR)/xfce4.target.wants/
 	ln -sf ../xfwm4.service $(DESTDIR)$(SYSTEMDUSERUNITDIR)/xfce4.target.wants/
+endif
+if HAVE_GNOME
+	(mkinstalldirs) $(DESTDIR)$(SYSTEMDUSERUNITDIR)/gnome.target.wants
+	ln -sf ../gnome-session.service $(DESTDIR)$(SYSTEMDUSERUNITDIR)/gnome.target.wants/
 endif
 

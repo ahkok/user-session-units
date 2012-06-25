@@ -1,0 +1,5 @@
+
+[Unit]
+Description=The GNOME Desktop Environment
+Wants=xorg.target
+Requires=dbus.socket

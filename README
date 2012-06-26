@@ -84,3 +84,7 @@ in ~/.config/systemd/user.
 This should simply be done by the SA running: `systemctl enable
 user-session@joe.service`.
 
+---
+
+Download release tarballs here:
+    http://foo-projects.org/~sofar/user-session-units/

@@ -1,5 +1,6 @@
 
 [Unit]
 Description=XBMC
-Wants=xorg.target dbus.socket
-
+Wants=xorg.target
+Requires=dbus.socket
+AllowIsolate=true

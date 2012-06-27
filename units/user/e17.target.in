@@ -3,4 +3,4 @@
 Description=The Englightenment Desktop Environment built on EFL
 Wants=xorg.target
 Requires=dbus.socket
-
+AllowIsolate=true

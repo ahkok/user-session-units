@@ -1,5 +1,6 @@
 
 [Unit]
 Description=The Xfce 4.x Desktop Environment
-Wants=xorg.target dbus.socket
-
+Wants=xorg.target
+Requires=dbus.socket
+AllowIsolate=true

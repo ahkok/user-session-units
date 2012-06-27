@@ -28,7 +28,7 @@ AC_MSG_RESULT($result)
 
 # Check for dbus daemon path for the session bus
 PKG_CHECK_MODULES([DBUS], [dbus-1])
-
+DBUSDAEMONDIR="`$PKG_CONFIG --variable=daemondir dbus-1`"
 DBUSPREFIX="`$PKG_CONFIG --variable=prefix dbus-1`"
 AC_SUBST(DBUSDAEMONDIR)
 AC_SUBST(DBUSPREFIX)

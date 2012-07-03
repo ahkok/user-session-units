@@ -56,6 +56,11 @@ AC_CHECK_PROG([KDE_PROG], [startkde], [`which startkde`], [], [], [])
 AC_SUBST(KDE_PROG)
 AM_CONDITIONAL([HAVE_KDE], [test -n "$KDE_PROG"])
 
+AC_CHECK_PROG([MYTH_PROG], [mythfrontend], [`which mythfrontend`], [], [], [])
+AC_SUBST(MYTH_PROG)
+AM_CONDITIONAL([HAVE_MYTH], [test -n "$MYTH_PROG"])
+
+
 AC_OUTPUT([
 units/system/user-session@.service
 units/user/dbus.socket
@@ -71,4 +76,6 @@ units/user/gnome.target
 units/user/gnome-session.service
 units/user/kde.target
 units/user/startkde.service
+units/user/mythtv.target
+units/user/mythfrontend.service
 ])

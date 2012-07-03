@@ -39,6 +39,11 @@ systemduserunit_DATA += \
 	units/user/kde.target \
 	units/user/startkde.service
 endif
+if HAVE_MYTH
+systemduserunit_DATA += \
+	units/user/mythtv.target \
+	units/user/mythfrontend.service
+endif
 
 
 
@@ -63,5 +68,9 @@ endif
 if HAVE_KDE
 	$(mkinstalldirs) $(DESTDIR)$(SYSTEMDUSERUNITDIR)/kde.target.wants
 	ln -sf ../startkde.service $(DESTDIR)$(SYSTEMDUSERUNITDIR)/kde.target.wants/
+endif
+if HAVE_MYTH
+	$(mkinstalldirs) $(DESTDIR)$(SYSTEMDUSERUNITDIR)/mythtv.target.wants
+	ln -sf ../mythfrontend.service $(DESTDIR)$(SYSTEMDUSERUNITDIR)/mythtv.target.wants/
 endif
 

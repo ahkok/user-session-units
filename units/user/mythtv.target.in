@@ -1,0 +1,7 @@
+
+[Unit]
+Description=MythTV Frontend
+Wants=xorg.target
+Requires=dbus.socket
+AllowIsolate=true
+

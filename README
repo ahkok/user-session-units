@@ -104,6 +104,9 @@ root> # su - joe
 joe> $ export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/dbus/user_bus_socket
 joe> $ systemctl --user
 
+One useful thing to try is to run dbus-monitor as joe after setting the session
+bus address. It will show you if the session bus is functional.
+
 The system journal should capture all messages output by user session
 services. The user is currently not able to see those messages if you
 disabled persistent journal logging (IOW, if you don't have /var/log/journal).

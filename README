@@ -82,10 +82,17 @@ in ~/.config/systemd/user.
 2) Enable auto-logon/start user session at boot time (optional).
 
 This should simply be done by the SA running: `systemctl enable
-user-session@joe.service`.
+user-session@joe.service`. However, this is currently yet not
+supported in systemctl, so you have to manually create a symlink:
 
-Note that if you are using systemd newer than 185, you must use UIDs
+ln -sf /usr/lib/systemd/system/user-session@.service \
+       /etc/systemd/system/graphical.target.wants/user-session@joe.service
+
+Note that if you are using systemd version 186 or newer, you must use UIDs
 instead of usernames here.
+
+ln -sf /usr/lib/systemd/system/user-session@.service \
+       /etc/systemd/system/graphical.target.wants/user-session@1000.service
 
 ---
 

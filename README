@@ -94,6 +94,20 @@ instead of usernames here.
 ln -sf /usr/lib/systemd/system/user-session@.service \
        /etc/systemd/system/graphical.target.wants/user-session@1000.service
 
+
+Debugging:
+
+You can connect to the user session over dbus and use regular systemctl
+commands to start/stop units, look at the state etc.
+
+root> # su - joe
+joe> $ export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/dbus/user_bus_socket
+joe> $ systemctl --user
+
+The system journal should capture all messages output by user session
+services. The user is currently not able to see those messages if you
+disabled persistent journal logging (IOW, if you don't have /var/log/journal).
+
 ---
 
 Download release tarballs here:

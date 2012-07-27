@@ -57,6 +57,12 @@ Prerequisites:
   last-good version of the patch can be found in the /patches/
   folder in this source tree.
 
+  permissions - in order for a normal user to start Xorg and control
+  sound and/or video without seat management, the user running the
+  session will likely need to be added to the video and audio groups,
+  and you may have to make Xorg setuid root (4711). This is a
+  potential security risk, so, use caution.
+
 
 Installation:
 

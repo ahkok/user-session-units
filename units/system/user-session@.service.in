@@ -15,6 +15,7 @@ PAMName=login
 ControlGroup=%R/user/%I/shared cpu:/
 ControlGroupModify=yes
 Type=notify
+TTYPath=/dev/tty1
 ExecStart=-@SYSTEMDUTILDIR@/systemd --user
 Environment=DISPLAY=:0
 Environment=XDG_RUNTIME_DIR=/run/user/%I

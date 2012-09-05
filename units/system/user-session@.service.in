@@ -12,7 +12,7 @@ After=systemd-user-sessions.service
 [Service]
 User=%I
 PAMName=login
-ControlGroup=%R/user/%I/shared cpu:/
+ControlGroup=%R/user/%I/shared cpu:/ memory:/
 ControlGroupModify=yes
 Type=notify
 TTYPath=/dev/tty1

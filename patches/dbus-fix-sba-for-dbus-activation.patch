@@ -1,6 +1,6 @@
 diff -uNr dbus-1.6.0/dbus/dbus-server-unix.c dbus-1.6.0-2/dbus/dbus-server-unix.c
 --- dbus-1.6.0/dbus/dbus-server-unix.c	2012-03-28 19:43:32.000000000 +0200
-+++ dbus-1.6.0-2/dbus/dbus-server-unix.c	2012-06-12 15:00:27.100431004 +0200
++++ dbus-1.6.0-2/dbus/dbus-server-unix.c	2012-08-09 03:14:32.660650274 +0200
 @@ -149,7 +149,7 @@
      }
    else if (strcmp (method, "systemd") == 0)
@@ -15,8 +15,8 @@ diff -uNr dbus-1.6.0/dbus/dbus-server-unix.c dbus-1.6.0-2/dbus/dbus-server-unix.
          }
  
 -      _dbus_string_init_const (&address, "systemd:");
-+      if(!_dbus_string_init(&address))
-+          goto oom;
++      if (!_dbus_string_init(&address))
++          goto systemd_oom;
  
 -      *server_p = _dbus_server_new_for_socket (fds, n, &address, NULL);
 -      if (*server_p == NULL)
@@ -25,30 +25,31 @@ diff -uNr dbus-1.6.0/dbus/dbus-server-unix.c dbus-1.6.0-2/dbus/dbus-server-unix.
 -          int i;
 -
 -          for (i = 0; i < n; i++)
-+          if ( i > 0)
++          if (i > 0)
              {
 -              _dbus_close_socket (fds[i], NULL);
-+              if(!_dbus_string_append (&address, ";"))
-+                goto oom;
++              if (!_dbus_string_append (&address, ";"))
++                goto systemd_oom;
              }
 -          dbus_free (fds);
 -
 -          dbus_set_error (error, DBUS_ERROR_NO_MEMORY, NULL);
 -          return DBUS_SERVER_LISTEN_DID_NOT_CONNECT;
-+          if(!_dbus_append_address_from_socket (fds[i], &address))
-+            goto oom;
++          if (!_dbus_append_address_from_socket (fds[i], &address, error))
++            goto systemd_err;
          }
  
 +      *server_p = _dbus_server_new_for_socket (fds, n, &address, NULL);
 +      if (*server_p == NULL)
-+        goto oom;
++        goto systemd_oom;
 +
        dbus_free (fds);
  
        return DBUS_SERVER_LISTEN_OK;
 -	}
-+  oom:
-+      dbus_set_error (error, DBUS_ERROR_NO_MEMORY, NULL);
++  systemd_oom:
++      _DBUS_SET_OOM (error);
++  systemd_err:
 +      for (i = 0; i < n; i++)
 +        {
 +          _dbus_close_socket (fds[i], NULL);
@@ -56,7 +57,6 @@ diff -uNr dbus-1.6.0/dbus/dbus-server-unix.c dbus-1.6.0-2/dbus/dbus-server-unix.
 +      dbus_free (fds);
 +      _dbus_string_free (&address);
 +
-+      dbus_set_error (error, DBUS_ERROR_NO_MEMORY, NULL);
 +      return DBUS_SERVER_LISTEN_DID_NOT_CONNECT;
 +    }
  #ifdef DBUS_ENABLE_LAUNCHD
@@ -64,77 +64,97 @@ diff -uNr dbus-1.6.0/dbus/dbus-server-unix.c dbus-1.6.0-2/dbus/dbus-server-unix.
      {
 diff -uNr dbus-1.6.0/dbus/dbus-sysdeps-unix.c dbus-1.6.0-2/dbus/dbus-sysdeps-unix.c
 --- dbus-1.6.0/dbus/dbus-sysdeps-unix.c	2012-06-05 13:17:45.000000000 +0200
-+++ dbus-1.6.0-2/dbus/dbus-sysdeps-unix.c	2012-06-13 22:39:58.558828789 +0200
-@@ -4086,4 +4086,61 @@
++++ dbus-1.6.0-2/dbus/dbus-sysdeps-unix.c	2012-08-09 03:20:15.974358261 +0200
+@@ -55,6 +55,7 @@
+ #include <netinet/in.h>
+ #include <netdb.h>
+ #include <grp.h>
++#include <arpa/inet.h>
+ 
+ #ifdef HAVE_ERRNO_H
+ #include <errno.h>
+@@ -4086,4 +4087,71 @@
      close (i);
  }
  
 +/**
-+ * Read the addres from the socket and append it to the string
++ * Read the address from the socket and append it to the string
 + *
 + * @param fd the socket
 + * @param address
++ * @param error return location for error code
 + */
-+dbus_bool_t _dbus_append_address_from_socket (int fd, DBusString *address)
++dbus_bool_t
++_dbus_append_address_from_socket (int         fd,
++                                  DBusString *address,
++                                  DBusError  *error)
 +{
-+  struct sockaddr_storage socket;
-+  struct sockaddr_in *inet_addr = (struct sockaddr_in*)&socket;
-+  struct sockaddr_in6 *inet6_addr = (struct sockaddr_in6*)&socket;
-+  struct sockaddr_un *unix_addr = (struct sockaddr_un*)&socket;
-+  char host[71];
++  union {
++      struct sockaddr sa;
++      struct sockaddr_storage storage;
++      struct sockaddr_un un;
++      struct sockaddr_in ipv4;
++      struct sockaddr_in6 ipv6;
++  } socket;
 +  char hostip[INET6_ADDRSTRLEN];
-+  int size = sizeof(struct sockaddr_storage);
++  int size = sizeof(socket);
 +
-+  getsockname(fd, (struct sockaddr*)&socket, &size);
++  if (getsockname(fd, &socket.sa, &size))
++    goto err;
 +
-+  switch(socket.ss_family)
++  switch (socket.sa.sa_family)
 +    {
 +    case AF_UNIX:
-+      if (unix_addr->sun_path[0]=='\0')
++      if (socket.un.sun_path[0]=='\0')
 +        {
-+          if (!_dbus_string_append (address, "unix:abstract=") ||
-+              !_dbus_string_append (address, &(unix_addr->sun_path[1])))
-+            return FALSE;
++          if (_dbus_string_append_printf (address, "unix:abstract=%s", &(socket.un.sun_path[1])))
++            return TRUE;
 +        }
 +      else
 +        {
-+          if (!_dbus_string_append (address, "unix:path=") ||
-+              !_dbus_string_append (address, unix_addr->sun_path))
-+            return FALSE;
++          if (_dbus_string_append_printf (address, "unix:path=%s", socket.un.sun_path))
++            return TRUE;
 +        }
 +      break;
 +    case AF_INET:
-+      if(inet_ntop(AF_INET, inet_addr, hostip, INET6_ADDRSTRLEN))
-+        snprintf(host, 71, "tcp:family=ipv4,host=%s,port=%hu",
-+                 hostip, ntohs(inet_addr->sin_port));
-+      else
-+        return FALSE;
-+      if(!_dbus_string_append (address, host))
-+        return FALSE;
-+    case AF_INET6:
-+      if(inet_ntop(AF_INET6, inet_addr, hostip, INET6_ADDRSTRLEN))
-+        snprintf(host, 71, "tcp:family=ipv6,host=%s,port=%hu",
-+                 hostip, ntohs(inet_addr->sin_port));
-+      else
-+        return FALSE;
-+      if(!_dbus_string_append (address, host))
-+        return FALSE;
++      if (inet_ntop(AF_INET, &socket.ipv4.sin_addr, hostip, sizeof (hostip)))
++        if (_dbus_string_append_printf (address, "tcp:family=ipv4,host=%s,port=%u",
++                   hostip, ntohs(socket.ipv4.sin_port)))
++          return TRUE;
 +      break;
++#ifdef AF_INET6
++    case AF_INET6:
++      if (inet_ntop(AF_INET6, &socket.ipv6.sin6_addr, hostip, sizeof (hostip)))
++        if (_dbus_string_append_printf (address, "tcp:family=ipv6,host=%s,port=%u",
++                   hostip, ntohs(socket.ipv6.sin6_port)))
++          return TRUE;
++      break;
++#endif
 +    default:
++      dbus_set_error(error,
++                     _dbus_error_from_errno (EINVAL),
++                     "Failed to read address from socket: Unknown socket type.");
 +      return FALSE;
 +    }
-+  return TRUE;
++ err:
++  dbus_set_error(error,
++               _dbus_error_from_errno (errno),
++               "Failed to open socket: %s",
++               _dbus_strerror (errno));
++  return FALSE;
 +}
 +
  /* tests in dbus-sysdeps-util.c */
 diff -uNr dbus-1.6.0/dbus/dbus-sysdeps-unix.h dbus-1.6.0-2/dbus/dbus-sysdeps-unix.h
 --- dbus-1.6.0/dbus/dbus-sysdeps-unix.h	2012-06-05 13:17:45.000000000 +0200
-+++ dbus-1.6.0-2/dbus/dbus-sysdeps-unix.h	2012-06-12 14:23:28.748164224 +0200
-@@ -138,6 +138,8 @@
++++ dbus-1.6.0-2/dbus/dbus-sysdeps-unix.h	2012-08-09 02:37:14.712628473 +0200
+@@ -138,6 +138,10 @@
  
  void _dbus_close_all (void);
  
-+dbus_bool_t _dbus_append_address_from_socket (int fd, DBusString *address);
++dbus_bool_t _dbus_append_address_from_socket (int         fd,
++                                              DBusString *address,
++                                              DBusError  *error);
 +
  /** @} */
  

@@ -1,7 +1,8 @@
-diff -uNr dbus-1.6.0/dbus/dbus-server-unix.c dbus-1.6.0-2/dbus/dbus-server-unix.c
---- dbus-1.6.0/dbus/dbus-server-unix.c	2012-03-28 19:43:32.000000000 +0200
-+++ dbus-1.6.0-2/dbus/dbus-server-unix.c	2012-08-09 03:14:32.660650274 +0200
-@@ -149,7 +149,7 @@
+diff --git a/dbus/dbus-server-unix.c b/dbus/dbus-server-unix.c
+index 130f66e..4fd772d 100644
+--- a/dbus/dbus-server-unix.c
++++ b/dbus/dbus-server-unix.c
+@@ -149,7 +149,7 @@ _dbus_server_listen_platform_specific (DBusAddressEntry *entry,
      }
    else if (strcmp (method, "systemd") == 0)
      {
@@ -10,7 +11,7 @@ diff -uNr dbus-1.6.0/dbus/dbus-server-unix.c dbus-1.6.0-2/dbus/dbus-server-unix.
        DBusString address;
  
        n = _dbus_listen_systemd_sockets (&fds, error);
-@@ -159,27 +159,39 @@
+@@ -159,27 +159,39 @@ _dbus_server_listen_platform_specific (DBusAddressEntry *entry,
            return DBUS_SERVER_LISTEN_DID_NOT_CONNECT;
          }
  
@@ -62,9 +63,10 @@ diff -uNr dbus-1.6.0/dbus/dbus-server-unix.c dbus-1.6.0-2/dbus/dbus-server-unix.
  #ifdef DBUS_ENABLE_LAUNCHD
    else if (strcmp (method, "launchd") == 0)
      {
-diff -uNr dbus-1.6.0/dbus/dbus-sysdeps-unix.c dbus-1.6.0-2/dbus/dbus-sysdeps-unix.c
---- dbus-1.6.0/dbus/dbus-sysdeps-unix.c	2012-06-05 13:17:45.000000000 +0200
-+++ dbus-1.6.0-2/dbus/dbus-sysdeps-unix.c	2012-08-09 03:20:15.974358261 +0200
+diff --git a/dbus/dbus-sysdeps-unix.c b/dbus/dbus-sysdeps-unix.c
+index b4ecc96..41abc4d 100644
+--- a/dbus/dbus-sysdeps-unix.c
++++ b/dbus/dbus-sysdeps-unix.c
 @@ -55,6 +55,7 @@
  #include <netinet/in.h>
  #include <netdb.h>
@@ -73,8 +75,8 @@ diff -uNr dbus-1.6.0/dbus/dbus-sysdeps-unix.c dbus-1.6.0-2/dbus/dbus-sysdeps-uni
  
  #ifdef HAVE_ERRNO_H
  #include <errno.h>
-@@ -4086,4 +4087,71 @@
-     close (i);
+@@ -4160,4 +4161,71 @@ _dbus_check_setuid (void)
+ #endif
  }
  
 +/**
@@ -145,10 +147,11 @@ diff -uNr dbus-1.6.0/dbus/dbus-sysdeps-unix.c dbus-1.6.0-2/dbus/dbus-sysdeps-uni
 +}
 +
  /* tests in dbus-sysdeps-util.c */
-diff -uNr dbus-1.6.0/dbus/dbus-sysdeps-unix.h dbus-1.6.0-2/dbus/dbus-sysdeps-unix.h
---- dbus-1.6.0/dbus/dbus-sysdeps-unix.h	2012-06-05 13:17:45.000000000 +0200
-+++ dbus-1.6.0-2/dbus/dbus-sysdeps-unix.h	2012-08-09 02:37:14.712628473 +0200
-@@ -138,6 +138,10 @@
+diff --git a/dbus/dbus-sysdeps-unix.h b/dbus/dbus-sysdeps-unix.h
+index 9b70896..a265b33 100644
+--- a/dbus/dbus-sysdeps-unix.h
++++ b/dbus/dbus-sysdeps-unix.h
+@@ -138,6 +138,10 @@ dbus_bool_t _dbus_parse_uid (const DBusString  *uid_str,
  
  void _dbus_close_all (void);
  
@@ -159,4 +162,3 @@ diff -uNr dbus-1.6.0/dbus/dbus-sysdeps-unix.h dbus-1.6.0-2/dbus/dbus-sysdeps-uni
  /** @} */
  
  DBUS_END_DECLS
-Binary files dbus-1.6.0/.swp and dbus-1.6.0-2/.swp differ

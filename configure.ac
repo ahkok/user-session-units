@@ -63,6 +63,7 @@ AM_CONDITIONAL([HAVE_MYTH], [test -n "$MYTH_PROG"])
 
 AC_OUTPUT([
 units/system/user-session@.service
+units/system/systemd-stop-user-sessions.service
 units/user/dbus.socket
 units/user/dbus.service
 units/user/e17.target

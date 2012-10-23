@@ -5,7 +5,8 @@ systemdsystemunitdir = @SYSTEMDSYSTEMUNITDIR@
 systemduserunitdir = @SYSTEMDUSERUNITDIR@
 
 systemdsystemunit_DATA = \
-	units/system/user-session@.service
+	units/system/user-session@.service \
+	units/system/systemd-stop-user-sessions.service
 
 systemduserunit_DATA = \
 	units/user/dbus.socket \
@@ -48,6 +49,8 @@ endif
 
 
 install-data-hook:
+	$(mkinstalldirs) $(DESTDIR)$(SYSTEMDSYSTEMUNITDIR)/shutdown.target.wants
+	ln -sf ../systemd-stop-user-sessions.service $(DESTDIR)$(SYSTEMDSYSTEMUNITDIR)/shutdown.target.wants/
 if HAVE_E
 	$(mkinstalldirs) $(DESTDIR)$(SYSTEMDUSERUNITDIR)/e17.target.wants
 	ln -sf ../enlightenment.service $(DESTDIR)$(SYSTEMDUSERUNITDIR)/e17.target.wants/

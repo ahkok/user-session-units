@@ -18,5 +18,10 @@ Type=notify
 TTYPath=/dev/tty1
 ExecStart=-@SYSTEMDUTILDIR@/systemd --user
 Environment=DISPLAY=:0
-Environment=XDG_RUNTIME_DIR=/run/user/%I
-Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/%I/dbus/user_bus_socket
+Environment=XDG_CACHE_HOME=%h/.cache
+Environment=XDG_CONFIG_DIRS=/etc/xdg
+Environment=XDG_CONFIG_HOME=%h/.config
+Environment=XDG_DATA_DIRS=/usr/local/share/:/usr/share/
+Environment=XDG_DATA_HOME=%h/.local/share
+Environment=XDG_RUNTIME_DIR=/run/user/%U
+Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/%U/dbus/user_bus_socket

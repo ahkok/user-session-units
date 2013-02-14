@@ -8,10 +8,13 @@
 [Unit]
 Description=User Manager for %I
 After=systemd-user-sessions.service
+# This is needed for folks running Xorg on vt/1
+Conflicts=getty@tty1.service
 
 [Service]
 User=%I
 PAMName=login
+# Note memory:/ required kernel memory CGroups support
 ControlGroup=%R/user/%I/shared cpu:/ memory:/
 ControlGroupModify=yes
 Type=notify

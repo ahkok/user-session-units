@@ -21,7 +21,7 @@ AC_MSG_CHECKING(for xorg-launch-helper)
 if test -f "$SYSTEMDUSERUNITDIR/xorg.target" ; then
   result=yes
 else
-  AC_ERROR([xorg-launch-helper is required for most of the units])
+  AC_MSG_WARN([xorg-launch-helper is required for most of the units])
   result=no
 fi
 AC_MSG_RESULT($result)

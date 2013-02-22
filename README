@@ -38,6 +38,7 @@ Prerequisites:
 
   systemd - required. This package uses the pkg-config file from
   systemd to make sure items are installed in the proper locations.
+  You should use version 186 or higher.
 
   PAM needs to be enabled in systemd. Your system should have
   `pam_systemd.so` used in the `login` or `system-auth` files in
@@ -55,7 +56,8 @@ Prerequisites:
   live without dbus activation. For reference, the bug is here:
   https://bugs.freedesktop.org/show_bug.cgi?id=50962. A copy of the
   last-good version of the patch can be found in the /patches/
-  folder in this source tree.
+  folder in this source tree. This patch is slated to be part of
+  dbus-1.6.9 which is as of this writing not yet released.
 
   permissions - in order for a normal user to start Xorg and control
   sound and/or video without seat management, the user running the
@@ -88,17 +90,17 @@ in ~/.config/systemd/user.
 2) Enable auto-logon/start user session at boot time (optional).
 
 This should simply be done by the SA running: `systemctl enable
-user-session@joe.service`. However, this is currently yet not
+user-session@1000.service`. However, this is currently yet not
 supported in systemctl, so you have to manually create a symlink:
 
 ln -sf /usr/lib/systemd/system/user-session@.service \
-       /etc/systemd/system/graphical.target.wants/user-session@joe.service
+       /etc/systemd/system/graphical.target.wants/user-session@1000.service
 
-Note that if you are using systemd version 186 or newer, you must use UIDs
-instead of usernames here.
+Note that if you are using systemd version 185 or lower, you must use names
+instead of UIDs here.
 
 ln -sf /usr/lib/systemd/system/user-session@.service \
-       /etc/systemd/system/graphical.target.wants/user-session@1000.service
+       /etc/systemd/system/graphical.target.wants/user-session@joe.service
 
 
 Debugging:

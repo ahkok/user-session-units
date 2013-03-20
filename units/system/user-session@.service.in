@@ -23,3 +23,6 @@ ExecStart=-@SYSTEMDUTILDIR@/systemd --user
 Environment=DISPLAY=:0
 Environment=XDG_RUNTIME_DIR=/run/user/%I
 Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/%I/dbus/user_bus_socket
+
+[Install]
+Alias=user-session@%i.service

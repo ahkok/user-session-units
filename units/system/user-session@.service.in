@@ -6,7 +6,7 @@
 #  (at your option) any later version.
 
 [Unit]
-Description=User Manager for %I
+Description=User Manager for %u
 After=systemd-user-sessions.service
 # This is needed for folks running Xorg on vt/1
 Conflicts=getty@tty1.service
@@ -15,14 +15,14 @@ Conflicts=getty@tty1.service
 User=%I
 PAMName=login
 # Note memory:/ required kernel memory CGroups support
-ControlGroup=%R/user/%I/shared cpu:/ memory:/
+ControlGroup=%R/user/%u/shared cpu:/ memory:/
 ControlGroupModify=yes
 Type=notify
 TTYPath=/dev/tty1
 ExecStart=-@SYSTEMDUTILDIR@/systemd --user
 Environment=DISPLAY=:0
-Environment=XDG_RUNTIME_DIR=/run/user/%I
-Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/%I/dbus/user_bus_socket
+Environment=XDG_RUNTIME_DIR=/run/user/%U
+Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/%U/dbus/user_bus_socket
 
 [Install]
 Alias=user-session@%i.service

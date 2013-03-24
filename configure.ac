@@ -60,6 +60,9 @@ AC_CHECK_PROG([MYTH_PROG], [mythfrontend], [`which mythfrontend`], [], [], [])
 AC_SUBST(MYTH_PROG)
 AM_CONDITIONAL([HAVE_MYTH], [test -n "$MYTH_PROG"])
 
+AC_CHECK_PROG([OPENBOX_PROG], [openbox], [`which openbox`], [], [], [])
+AC_SUBST(OPENBOX_PROG)
+AM_CONDITIONAL([HAVE_OPENBOX], [test -n "$OPENBOX_PROG"])
 
 AC_OUTPUT([
 units/system/user-session@.service
@@ -79,4 +82,6 @@ units/user/kde.target
 units/user/startkde.service
 units/user/mythtv.target
 units/user/mythfrontend.service
+units/user/openbox.target
+units/user/openbox.service
 ])

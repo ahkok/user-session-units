@@ -1,0 +1,11 @@
+
+[Unit]
+Description=The Openbox Window Manager
+After=xorg.target
+Requires=dbus.socket
+
+[Service]
+ExecStart=@OPENBOX_PROG@
+
+[Install]
+WantedBy=openbox.target

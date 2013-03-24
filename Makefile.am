@@ -45,6 +45,11 @@ systemduserunit_DATA += \
 	units/user/mythtv.target \
 	units/user/mythfrontend.service
 endif
+if HAVE_OPENBOX
+systemduserunit_DATA += \
+	units/user/openbox.target \
+	units/user/openbox.service
+endif
 
 
 
@@ -75,5 +80,9 @@ endif
 if HAVE_MYTH
 	$(mkinstalldirs) $(DESTDIR)$(SYSTEMDUSERUNITDIR)/mythtv.target.wants
 	ln -sf ../mythfrontend.service $(DESTDIR)$(SYSTEMDUSERUNITDIR)/mythtv.target.wants/
+endif
+if HAVE_OPENBOX
+	$(mkinstalldirs) $(DESTDIR)$(SYSTEMDUSERUNITDIR)/openbox.target.wants
+	ln -sf ../openbox.service $(DESTDIR)$(SYSTEMDUSERUNITDIR)/openbox.target.wants/
 endif
 

@@ -64,6 +64,10 @@ AC_CHECK_PROG([OPENBOX_PROG], [openbox], [`which openbox`], [], [], [])
 AC_SUBST(OPENBOX_PROG)
 AM_CONDITIONAL([HAVE_OPENBOX], [test -n "$OPENBOX_PROG"])
 
+AC_CHECK_PROG([STEAM_PROG], [steam], [`which steam`], [], [], [])
+AC_SUBST(STEAM_PROG)
+AM_CONDITIONAL([HAVE_STEAM], [test -n "$STEAM_PROG"])
+
 AC_OUTPUT([
 units/system/user-session@.service
 units/system/systemd-stop-user-sessions.service
@@ -84,4 +88,6 @@ units/user/mythtv.target
 units/user/mythfrontend.service
 units/user/openbox.target
 units/user/openbox.service
+units/user/steam.target
+units/user/steam.service
 ])

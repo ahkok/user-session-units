@@ -1,0 +1,6 @@
+
+[Unit]
+Description=Steam fullscreen Desktop Environment
+Wants=xorg.target
+Requires=dbus.socket
+AllowIsolate=true

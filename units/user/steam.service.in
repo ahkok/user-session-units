@@ -1,0 +1,11 @@
+
+[Unit]
+Description=Steam - Big Picture mode
+After=xorg.target
+Requires=dbus.socket
+
+[Service]
+ExecStart=@STEAM_PROG@ steam://open/bigpicture
+
+[Install]
+WantedBy=steam.target

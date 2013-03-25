@@ -50,6 +50,11 @@ systemduserunit_DATA += \
 	units/user/openbox.target \
 	units/user/openbox.service
 endif
+if HAVE_STEAM
+systemduserunit_DATA += \
+	units/user/steam.target \
+	units/user/steam.service
+endif
 
 
 
@@ -84,5 +89,9 @@ endif
 if HAVE_OPENBOX
 	$(mkinstalldirs) $(DESTDIR)$(SYSTEMDUSERUNITDIR)/openbox.target.wants
 	ln -sf ../openbox.service $(DESTDIR)$(SYSTEMDUSERUNITDIR)/openbox.target.wants/
+endif
+if HAVE_STEAM
+	$(mkinstalldirs) $(DESTDIR)$(SYSTEMDUSERUNITDIR)/steam.target.wants
+	ln -sf ../steam.service $(DESTDIR)$(SYSTEMDUSERUNITDIR)/steam.target.wants/
 endif
 

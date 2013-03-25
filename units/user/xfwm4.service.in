@@ -4,9 +4,8 @@ Description=Xfce Window Manager Daemon
 After=xorg.target
 
 [Service]
-Restart=always
-RestartSec=1
 ExecStart=@XFWM_PROG@
+Restart=on-failure
 
 [Install]
 WantedBy=xfce4.target

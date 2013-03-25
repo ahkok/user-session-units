@@ -6,6 +6,7 @@ Requires=dbus.socket
 
 [Service]
 ExecStart=@E_PROG@
+Restart=on-failure
 
 [Install]
 WantedBy=e17.target

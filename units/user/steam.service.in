@@ -6,6 +6,7 @@ Requires=dbus.socket
 
 [Service]
 ExecStart=@STEAM_PROG@ steam://open/bigpicture
+Restart=on-failure
 
 [Install]
 WantedBy=steam.target

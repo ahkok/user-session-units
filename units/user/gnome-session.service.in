@@ -6,6 +6,7 @@ Requires=dbus.socket
 
 [Service]
 ExecStart=@GNOME_PROG@
+Restart=on-failure
 
 [Install]
 WantedBy=gnome.target

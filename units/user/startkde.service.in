@@ -6,6 +6,7 @@ Requires=dbus.socket
 
 [Service]
 ExecStart=@KDE_PROG@
+Restart=on-failure
 
 [Install]
 WantedBy=kde.target

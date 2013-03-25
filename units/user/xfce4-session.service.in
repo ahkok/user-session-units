@@ -5,6 +5,7 @@ After=xorg.target
 
 [Service]
 ExecStart=@XFCE_PROG@
+Restart=on-failure
 
 [Install]
 WantedBy=xfce4.target

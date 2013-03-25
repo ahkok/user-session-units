@@ -6,6 +6,7 @@ Requires=dbus.socket
 
 [Service]
 ExecStart=@OPENBOX_PROG@
+Restart=on-failure
 
 [Install]
 WantedBy=openbox.target

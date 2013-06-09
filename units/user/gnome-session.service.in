@@ -1,12 +1,12 @@
 
 [Unit]
 Description=The GNOME session manager
-After=xorg.target
-Requires=dbus.socket
+Requires=dislpay-server.target
+After=display-server.target
 
 [Service]
 ExecStart=@GNOME_PROG@
 Restart=on-failure
 
 [Install]
-WantedBy=gnome.target
+Alias=session-manager.service

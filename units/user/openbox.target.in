@@ -1,6 +1,0 @@
-
-[Unit]
-Description=A Desktop Environment built on Openbox
-Wants=xorg.target
-Requires=dbus.socket
-AllowIsolate=true

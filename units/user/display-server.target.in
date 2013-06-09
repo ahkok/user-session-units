@@ -1,0 +1,8 @@
+
+[Unit]
+Description=Display server
+
+# We'll hardcode xorg for now, but in the future we'll probably want to remove
+# this so Wayland and other display servers can be used instead.
+Wants=xorg.target
+After=xorg.target

@@ -19,7 +19,7 @@ ControlGroup=%R/user/%u/shared cpu:/ memory:/
 ControlGroupModify=yes
 Type=notify
 TTYPath=/dev/tty1
-ExecStart=-@SYSTEMDUTILDIR@/systemd --user
+ExecStart=-/bin/sh -l -c "exec @SYSTEMDUTILDIR@/systemd --user"
 Environment=DISPLAY=:0
 Environment=XDG_RUNTIME_DIR=/run/user/%U
 Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/%U/dbus/user_bus_socket

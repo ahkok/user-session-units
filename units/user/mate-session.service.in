@@ -1,0 +1,12 @@
+
+[Unit]
+Description=The MATE session manager
+After=xorg.target
+Requires=dbus.socket
+
+[Service]
+ExecStart=@MATE_PROG@
+Restart=on-failure
+
+[Install]
+WantedBy=mate.target

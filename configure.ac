@@ -52,6 +52,10 @@ AC_CHECK_PROG([GNOME_PROG], [gnome-session], [`which gnome-session`], [], [], []
 AC_SUBST(GNOME_PROG)
 AM_CONDITIONAL([HAVE_GNOME], [test -n "$GNOME_PROG"])
 
+AC_CHECK_PROG([MATE_PROG], [mate-session], [`which mate-session`], [], [], [])
+AC_SUBST(MATE_PROG)
+AM_CONDITIONAL([HAVE_MATE], [test -n "$MATE_PROG"])
+
 AC_CHECK_PROG([KDE_PROG], [startkde], [`which startkde`], [], [], [])
 AC_SUBST(KDE_PROG)
 AM_CONDITIONAL([HAVE_KDE], [test -n "$KDE_PROG"])
@@ -82,6 +86,8 @@ units/user/xfce4.target
 units/user/xfwm4.service
 units/user/gnome.target
 units/user/gnome-session.service
+units/user/mate.target
+units/user/mate-session.service
 units/user/kde.target
 units/user/startkde.service
 units/user/mythtv.target

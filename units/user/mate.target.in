@@ -1,0 +1,6 @@
+
+[Unit]
+Description=The MATE Desktop Environment
+Wants=xorg.target
+Requires=dbus.socket
+AllowIsolate=true

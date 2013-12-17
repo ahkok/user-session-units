@@ -53,7 +53,7 @@ pam_conversation_fn(int msg_count,
 		printf("pam conversation with no message, or response");
 		return PAM_CONV_ERR;
 	}
-	*responses = calloc (msg_count, sizeof (struct pam_response));
+	*responses = calloc ((size_t)msg_count, sizeof (struct pam_response));
 	for (i = 0; i < msg_count; i++) {
 		const struct pam_message *msg = messages[i];
 

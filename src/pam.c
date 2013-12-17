@@ -1,9 +1,9 @@
 /*
- * This file is part of user-session
+ * This file is part of user-session-units
  *
- * (C) Copyright 2009 Intel Corporation
+ * (C) Copyright 2013 Intel Corporation
  * Authors:
- *     Auke Kok <auke@linux.intel.com>
+ *     Auke Kok <auke-jan.h.kok@intel.com>
  *     Arjan van de Ven <arjan@linux.intel.com>
  *     Michael Meeks <michael.meeks@novell.com>
  *

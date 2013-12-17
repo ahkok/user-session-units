@@ -22,7 +22,7 @@
 
 #include <security/pam_appl.h>
 
-#include "user-session.h"
+#include "pam.h"
 
 static pam_handle_t *ph;
 static struct pam_conv pc;
@@ -40,9 +40,7 @@ pam_conversation_fn(int msg_count,
 	int i;
 	(void)user_data;
 
-	d_in();
-
-	lprintf("pam conversation with %d messages", msg_count);
+	printf("pam conversation with %d messages", msg_count);
 	if (responses)
 		*responses = NULL;
 
@@ -51,7 +49,7 @@ pam_conversation_fn(int msg_count,
 
 	/* otherwise find any helpful data we can to print, and bail */
 	if (!responses || !messages) {
-		lprintf("pam conversation with no message, or response");
+		printf("pam conversation with no message, or response");
 		return PAM_CONV_ERR;
 	}
 	*responses = calloc (msg_count, sizeof (struct pam_response));
@@ -59,17 +57,16 @@ pam_conversation_fn(int msg_count,
 		const struct pam_message *msg = messages[i];
 
 		if (msg->msg_style == PAM_TEXT_INFO)
-			lprintf("pam chats to us: '%s'", msg->msg);
+			printf("pam chats to us: '%s'", msg->msg);
 		else if (msg->msg_style == PAM_ERROR_MSG)
-			lprintf("Error: pam error msg '%s'", msg->msg);
+			printf("Error: pam error msg '%s'", msg->msg);
 		else
-			lprintf("pam message %d style %d: '%s'",
+			printf("pam message %d style %d: '%s'",
 				 i, msg->msg_style, msg->msg);
 		(*responses)[i].resp = NULL;
 		(*responses)[i].resp_retcode = PAM_SUCCESS;
 	}
 
-	d_out();
 	return PAM_SUCCESS;
 }
 
@@ -84,12 +81,7 @@ pam_conversation_fn(int msg_count,
  */
 void setup_pam_session(void)
 {
-	char x[256];
 	int err;
-
-	d_in();
-
-	snprintf(x, 256, "tty%d", tty);
 
 	pc.conv = pam_conversation_fn;
 	pc.appdata_ptr = NULL;
@@ -98,33 +90,29 @@ void setup_pam_session(void)
 
 	err = pam_set_item(ph, PAM_TTY, &x);
 	if (err != PAM_SUCCESS) {
-		lprintf("pam_set_item PAM_TTY returned %d: %s\n", err, pam_strerror(ph, err));
+		printf("pam_set_item PAM_TTY returned %d: %s\n", err, pam_strerror(ph, err));
 		exit(EXIT_FAILURE);
 	}
 
 	err = pam_set_item(ph, PAM_XDISPLAY, &displayname);
 	if (err != PAM_SUCCESS) {
-		lprintf("pam_set_item PAM_DISPLAY returned %d: %s\n", err, pam_strerror(ph, err));
+		printf("pam_set_item PAM_DISPLAY returned %d: %s\n", err, pam_strerror(ph, err));
 		exit(EXIT_FAILURE);
 	}
 
 	err = pam_open_session(ph, 0);
 	if (err != PAM_SUCCESS) {
-		lprintf("pam_open_session returned %d: %s\n", err, pam_strerror(ph, err));
+		printf("pam_open_session returned %d: %s\n", err, pam_strerror(ph, err));
 		exit(EXIT_FAILURE);
 	}
-	d_out();
 }
 
 void close_pam_session(void)
 {
 	int err;
 
-	d_in();
-
 	err = pam_close_session(ph, 0);
 	if (err)
-		lprintf("pam_close_session returned %d: %s\n", err, pam_strerror(ph, err));
+		printf("pam_close_session returned %d: %s\n", err, pam_strerror(ph, err));
 	pam_end(ph, err);
-	d_out();
 }

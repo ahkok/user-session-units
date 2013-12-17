@@ -1,0 +1,10 @@
+[Unit]
+Description=User Session Launcher
+After=systemd-user-sessions.service systemd-logind.service
+Requires=systemd-logind.service
+
+[Service]
+ExecStart=/usr/bin/user-session-launch %i
+
+[Install]
+WantedBy=graphical.target

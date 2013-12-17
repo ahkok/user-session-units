@@ -5,6 +5,7 @@ AC_PREREQ([2.64])
 AC_INIT([user-session-units], [8], [auke-jan.h.kok@intel.com])
 AM_INIT_AUTOMAKE([])
 AC_CONFIG_FILES([Makefile])
+AC_PROG_CC
 
 # Systemd is required, obviously
 PKG_CHECK_MODULES([SYSTEMD], [systemd])
@@ -69,6 +70,7 @@ AC_SUBST(STEAM_PROG)
 AM_CONDITIONAL([HAVE_STEAM], [test -n "$STEAM_PROG"])
 
 AC_OUTPUT([
+units/system/user-session-launch@.service
 units/system/user-session@.service
 units/system/systemd-stop-user-sessions.service
 units/user/dbus.socket

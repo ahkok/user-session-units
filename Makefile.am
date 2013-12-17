@@ -1,3 +1,28 @@
+AM_CFLAGS = \
+	-std=gnu99 \
+	-fstack-protector \
+	-Wall \
+	-pedantic \
+	-Wstrict-prototypes \
+	-Wundef \
+	-fno-common \
+	-Werror-implicit-function-declaration \
+	-Wformat \
+	-Wformat-security \
+	-Werror=format-security \
+	-Wconversion
+
+bin_PROGRAMS = user-session-launch
+
+user_session_launch_SOURCES = \
+	src/launcher.c \
+	src/pam.c
+
+# FIXME: add pkgconfig checks for these instead
+user_session_launch_LDADD = \
+	-lsystemd-login \
+	-lpam \
+	-lpam_misc
 
 EXTRA_DIST = patches/dbus-fix-sba-for-dbus-activation.patch
 
@@ -5,6 +30,7 @@ systemdsystemunitdir = @SYSTEMDSYSTEMUNITDIR@
 systemduserunitdir = @SYSTEMDUSERUNITDIR@
 
 systemdsystemunit_DATA = \
+	units/system/user-session-launch@.service \
 	units/system/user-session@.service \
 	units/system/systemd-stop-user-sessions.service
 

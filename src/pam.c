@@ -21,6 +21,7 @@
 #include <sys/types.h>
 
 #include <security/pam_appl.h>
+#include <security/pam_misc.h>
 
 #include "pam.h"
 
@@ -75,28 +76,40 @@ pam_conversation_fn(int msg_count,
  * "at_console" logic will work correctly, as well as various /dev file
  * permissions.
  *
- * for pam_console to work we need to set the PAM_TTY and PAM_XDISPLAY variables,
- * before we open the session. "PAM_TTY" takes input in the form "ttyX", without
- * the /dev prefix, so we need to construct that in place here.
+ * for at_console to work we need to set the PAM_TTY variable before we open
+ * the session. "PAM_TTY" takes input in the form "ttyX".
+ *
+ * Additionally, for logind integration, set XDG_SEAT and XDG_VTNR.
+ * pam_systemd.so may guess the variables correctly, but set them beforehand
+ * just to be sure.
  */
-void setup_pam_session(void)
+void setup_pam_session(char *seat, char *user)
 {
 	int err;
 
 	pc.conv = pam_conversation_fn;
 	pc.appdata_ptr = NULL;
 
-	err = pam_start("login", pass->pw_name, &pc, &ph);
+	err = pam_start("login", user, &pc, &ph);
 
-	err = pam_set_item(ph, PAM_TTY, &x);
+	/* FIXME: do not hardcode the tty here; should check
+	 * first to see if it's already taken. */
+	err = pam_set_item(ph, PAM_TTY, "tty1");
 	if (err != PAM_SUCCESS) {
 		printf("pam_set_item PAM_TTY returned %d: %s\n", err, pam_strerror(ph, err));
 		exit(EXIT_FAILURE);
 	}
 
-	err = pam_set_item(ph, PAM_XDISPLAY, &displayname);
+	err = pam_misc_setenv(ph, "XDG_SEAT", seat, 0);
 	if (err != PAM_SUCCESS) {
-		printf("pam_set_item PAM_DISPLAY returned %d: %s\n", err, pam_strerror(ph, err));
+		printf("pam_misc_setenv XDG_SEAT returned %d: %s\n", err, pam_strerror(ph, err));
+		exit(EXIT_FAILURE);
+	}
+
+	/* FIXME: this variable should correspond to PAM_TTY */
+	err = pam_misc_setenv(ph, "XDG_VTNR", "1", 0);
+	if (err != PAM_SUCCESS) {
+		printf("pam_misc_setenv XDG_VTNR returned %d: %s\n", err, pam_strerror(ph, err));
 		exit(EXIT_FAILURE);
 	}
 

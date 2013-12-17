@@ -12,7 +12,7 @@
 #ifndef __PAM_H__
 #define __PAM_H__
 
-void setup_pam_session(void);
+void setup_pam_session(char *seat, char *user);
 void close_pam_session(void);
 
 #endif /* __PAM_H_ */

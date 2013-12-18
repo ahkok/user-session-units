@@ -71,7 +71,6 @@ AM_CONDITIONAL([HAVE_STEAM], [test -n "$STEAM_PROG"])
 
 AC_OUTPUT([
 units/system/user-session-launch@.service
-units/system/user-session@.service
 units/system/systemd-stop-user-sessions.service
 units/user/dbus.socket
 units/user/dbus.service

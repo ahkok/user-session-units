@@ -31,7 +31,6 @@ systemduserunitdir = @SYSTEMDUSERUNITDIR@
 
 systemdsystemunit_DATA = \
 	units/system/user-session-launch@.service \
-	units/system/user-session@.service \
 	units/system/systemd-stop-user-sessions.service
 
 systemduserunit_DATA = \

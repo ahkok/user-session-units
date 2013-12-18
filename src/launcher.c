@@ -9,6 +9,8 @@
  * of the License.
  */
 
+#define _GNU_SOURCE
+
 #include <errno.h>
 #include <getopt.h>
 #include <poll.h>
@@ -174,8 +176,8 @@ int main(int argc, char **argv)
 	}
 
 	/* We don't need to be privileged when the session closes */
-	if ((setuid(pw->pw_uid)) < 0)
-		perror("setuid");
+	if (setresuid(pw->pw_uid, pw->pw_uid, pw->pw_uid) != 0)
+		perror("setresuid");
 
 	pause();
 

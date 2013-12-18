@@ -13,12 +13,6 @@ Content:
 In the "units" folder, you will find several unit files for the system
 domain and the user session. The most critical ones are:
 
-  system/user-session@.service - This unit creates an auto-login
-  mechanism in systemd. This is the unit that "starts" a
-  user session. It can either be run manually: `systemd start
-  user-session@joe.service`. Or one could make this happen at boot
-  time automatically with `systemctl enable user-session@joe.service`.
-
   user/dbus.socket and user/dbus.service - This creates the dbus
   session bus for the systemd user session. The session bus should
   live under XDG_RUNTIME_DIR, and so the user-session@.service refers
@@ -32,6 +26,9 @@ domain and the user session. The most critical ones are:
   other - various example units are packaged for several popular Linux
   desktop sessions. They are examples, which work for the author,
   but may not necessarily function properly on other distributions.
+
+  user-session@.service is obsolete, and you should be automatically
+  using the systemd-provided user@.service.
 
 
 Prerequisites:
@@ -90,17 +87,27 @@ in ~/.config/systemd/user.
 2) Enable auto-logon/start user session at boot time (optional).
 
 This should simply be done by the SA running: `systemctl enable
-user-session@1000.service`. However, this is currently yet not
-supported in systemctl, so you have to manually create a symlink:
+user-session-launch@<insert seat>-<insert uid>.service`. However,
+this may not work for some people, but you can manually create the
+symlink like this:
 
-ln -sf /usr/lib/systemd/system/user-session@.service \
-       /etc/systemd/system/graphical.target.wants/user-session@1000.service
+ln -sf /usr/lib/systemd/system/user-session-launch@.service \
+       /etc/systemd/system/graphical.target.wants/user-session-launch@seat0-1000.service
 
-Note that if you are using systemd version 185 or lower, you must use names
-instead of UIDs here.
+Note that depending on your system, you may have to change the seat
+number and user ids.
 
-ln -sf /usr/lib/systemd/system/user-session@.service \
-       /etc/systemd/system/graphical.target.wants/user-session@joe.service
+This version of user-session-units requires systemd-208 or newer. Older
+versions are no longer supported.
+
+Once you enable auto-logon for a user on a seat, the
+user-session-launch daemon will wait for the seat to appear, and tell
+logind to spawn a systemd --user on it. From there on, the default
+user units in this package can take over.
+
+The units in this package assume you're going to be running X on
+:0. Although you can pass seat name, nothing inside the user session
+in this package is properly looking at the seat parameters yet.
 
 
 Debugging:

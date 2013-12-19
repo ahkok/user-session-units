@@ -13,6 +13,7 @@
 
 #include <errno.h>
 #include <getopt.h>
+#include <grp.h>
 #include <poll.h>
 #include <pwd.h>
 #include <signal.h>
@@ -174,6 +175,14 @@ int main(int argc, char **argv)
 		}
 		free(*s);
 	}
+
+	/* Be sure to not inherit root's supplemental groups */
+	if (initgroups(pw->pw_name, pw->pw_gid) != 0)
+		perror("initgroups");
+
+	/* Change our gid while we're still privileged */
+	if (setresgid(pw->pw_gid, pw->pw_gid, pw->pw_gid) != 0)
+		perror("setresgid");
 
 	/* We don't need to be privileged when the session closes */
 	if (setresuid(pw->pw_uid, pw->pw_uid, pw->pw_uid) != 0)

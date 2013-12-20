@@ -34,39 +34,38 @@ DBUSPREFIX="`$PKG_CONFIG --variable=prefix dbus-1`"
 AC_SUBST(DBUSDAEMONDIR)
 AC_SUBST(DBUSPREFIX)
 
-# these are the desktops:
-AC_CHECK_PROG([E_PROG], [enlightenment_start], [`which enlightenment_start`], [], [], [])
-AC_SUBST(E_PROG)
+# Should we include units for programs not on the system? (useful for packaging)
+AC_ARG_ENABLE([allunits], AS_HELP_STRING([--enable-allunits], [Include units for programs which are not detected]))
+
+if test "x$enable_allunits" = "xyes" ; then
+  E_PROG="/usr/bin/enlightenment_start"
+  XFWM_PROG="/usr/bin/xfwm4"
+  XFCE_PROG="/usr/bin/xfce4-session"
+  XBMC_PROG="/usr/bin/xbmc-standalone"
+  GNOME_PROG="/usr/bin/gnome-session"
+  KDE_PROG="/usr/bin/startkde"
+  MYTH_PROG="/usr/bin/mythfrontend"
+  OPENBOX_PROG="/usr/bin/openbox"
+  STEAM_PROG="/usr/bin/steam"
+else
+  AC_CHECK_PROG([E_PROG], [enlightenment_start], [`which enlightenment_start`])
+  AC_CHECK_PROG([XFWM_PROG], [xfwm4], [`which xfwm4`])
+  AC_CHECK_PROG([XFCE_PROG], [xfce4-session], [`which xfce4-session`])
+  AC_CHECK_PROG([XBMC_PROG], [xbmc-standalone], [`which xbmc-standalone`])
+  AC_CHECK_PROG([GNOME_PROG], [gnome-session], [`which gnome-session`])
+  AC_CHECK_PROG([KDE_PROG], [startkde], [`which startkde`])
+  AC_CHECK_PROG([MYTH_PROG], [mythfrontend], [`which mythfrontend`])
+  AC_CHECK_PROG([OPENBOX_PROG], [openbox], [`which openbox`])
+  AC_CHECK_PROG([STEAM_PROG], [steam], [`which steam`])
+fi
+
 AM_CONDITIONAL([HAVE_E], [test -n "$E_PROG"])
-
-AC_CHECK_PROG([XFCE_PROG], [xfce4-session], [`which xfce4-session`], [], [], [])
-AC_CHECK_PROG([XFWM_PROG], [xfwm4], [`which xfwm4`], [], [], [])
-AC_SUBST(XFCE_PROG)
-AC_SUBST(XFWM_PROG)
 AM_CONDITIONAL([HAVE_XFCE], [test -n "$XFCE_PROG"])
-
-AC_CHECK_PROG([XBMC_PROG], [xbmc-standalone], [`which xbmc-standalone`], [], [], [])
-AC_SUBST(XBMC_PROG)
 AM_CONDITIONAL([HAVE_XBMC], [test -n "$XBMC_PROG"])
-
-AC_CHECK_PROG([GNOME_PROG], [gnome-session], [`which gnome-session`], [], [], [])
-AC_SUBST(GNOME_PROG)
 AM_CONDITIONAL([HAVE_GNOME], [test -n "$GNOME_PROG"])
-
-AC_CHECK_PROG([KDE_PROG], [startkde], [`which startkde`], [], [], [])
-AC_SUBST(KDE_PROG)
 AM_CONDITIONAL([HAVE_KDE], [test -n "$KDE_PROG"])
-
-AC_CHECK_PROG([MYTH_PROG], [mythfrontend], [`which mythfrontend`], [], [], [])
-AC_SUBST(MYTH_PROG)
 AM_CONDITIONAL([HAVE_MYTH], [test -n "$MYTH_PROG"])
-
-AC_CHECK_PROG([OPENBOX_PROG], [openbox], [`which openbox`], [], [], [])
-AC_SUBST(OPENBOX_PROG)
 AM_CONDITIONAL([HAVE_OPENBOX], [test -n "$OPENBOX_PROG"])
-
-AC_CHECK_PROG([STEAM_PROG], [steam], [`which steam`], [], [], [])
-AC_SUBST(STEAM_PROG)
 AM_CONDITIONAL([HAVE_STEAM], [test -n "$STEAM_PROG"])
 
 AC_OUTPUT([

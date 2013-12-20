@@ -16,7 +16,8 @@ bin_PROGRAMS = user-session-launch
 
 user_session_launch_SOURCES = \
 	src/launcher.c \
-	src/pam.c
+	src/pam.c \
+	src/pam.h
 
 # FIXME: add pkgconfig checks for these instead
 user_session_launch_LDADD = \

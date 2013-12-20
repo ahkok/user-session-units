@@ -60,6 +60,11 @@ systemduserunit_DATA += \
 	units/user/gnome.target \
 	units/user/gnome-session.service
 endif
+if HAVE_MATE
+systemduserunit_DATA += \
+	units/user/mate.target \
+	units/user/mate-session.service
+endif
 if HAVE_KDE
 systemduserunit_DATA += \
 	units/user/kde.target \
@@ -102,6 +107,10 @@ endif
 if HAVE_GNOME
 	$(mkinstalldirs) $(DESTDIR)$(SYSTEMDUSERUNITDIR)/gnome.target.wants
 	ln -sf ../gnome-session.service $(DESTDIR)$(SYSTEMDUSERUNITDIR)/gnome.target.wants/
+endif
+if HAVE_MATE
+	$(mkinstalldirs) $(DESTDIR)$(SYSTEMDUSERUNITDIR)/mate.target.wants
+	ln -sf ../mate-session.service $(DESTDIR)$(SYSTEMDUSERUNITDIR)/mate.target.wants/
 endif
 if HAVE_KDE
 	$(mkinstalldirs) $(DESTDIR)$(SYSTEMDUSERUNITDIR)/kde.target.wants

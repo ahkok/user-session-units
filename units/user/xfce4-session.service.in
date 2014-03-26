@@ -1,12 +1,13 @@
 
 [Unit]
 Description=Xfce4 Session Manager
-After=xorg.target
+Requires=display-server.target
+After=display-server.target
 
 [Service]
 ExecStart=@XFCE_PROG@
 Restart=on-failure
 
 [Install]
-WantedBy=xfce4.target
+Alias=session-manager.service
 

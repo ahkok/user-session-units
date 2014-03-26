@@ -1,0 +1,9 @@
+
+[Unit]
+Description=Non-graphical services
+Wants=xorg.target
+Requires=dbus.socket
+After=xorg.target dbus.socket
+
+[Install]
+Alias=default.target

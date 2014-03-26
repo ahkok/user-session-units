@@ -1,0 +1,10 @@
+
+[Unit]
+Description=Graphical desktop
+Wants=window-manager.service session-manager.service
+Requires=cmdline.target display-server.target
+After=cmdline.target display-server.target window-manager.service session-manager.service
+AllowIsolate=true
+
+[Install]
+Alias=default.target

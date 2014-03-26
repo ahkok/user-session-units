@@ -1,6 +1,7 @@
 
 [Unit]
 Description=Xfce Window Manager Daemon
+Requires=xorg.target
 After=xorg.target
 
 [Service]
@@ -8,4 +9,4 @@ ExecStart=@XFWM_PROG@
 Restart=on-failure
 
 [Install]
-WantedBy=xfce4.target
+Alias=window-manager.service

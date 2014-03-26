@@ -1,12 +1,12 @@
 
 [Unit]
 Description=Steam - Big Picture mode
-After=xorg.target
-Requires=dbus.socket
+Requires=display-server.target
+After=display-server.target
 
 [Service]
 ExecStart=@STEAM_PROG@ steam://open/bigpicture
 Restart=on-failure
 
 [Install]
-WantedBy=steam.target
+WantedBy=graphical.target

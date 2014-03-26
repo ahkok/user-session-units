@@ -1,12 +1,12 @@
 
 [Unit]
 Description=The KDE start agent
-After=xorg.target
-Requires=dbus.socket
+Requires=display-server.target
+After=display-server.target
 
 [Service]
 ExecStart=@KDE_PROG@
 Restart=on-failure
 
 [Install]
-WantedBy=kde.target
+Alias=session-manager.service

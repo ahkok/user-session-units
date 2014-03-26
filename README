@@ -75,16 +75,36 @@ Configuration:
 There are two things that need to be done manually by the SA to enable
 and configure the user session properly.
 
-1) Choose the default target (desktop).
+1) Choose the default target (cmdline or graphical).
 
-Systemd has various places where this choice can be set. The
-distribution should place a `default.target` symlink in
-${prefix}/systemd/user/. The SA should place the symlink in
-${sysconfdir}/systemd/user/, and last, the user themselves can
-override those two locations by creating the `default.target` symlink
-in ~/.config/systemd/user.
+user-session-units ships two targets that can automatically be aliased
+to default.target: cmdline.target and graphical.target. cmdline.target
+won't start anything automatically, but serves as a target which other
+services can add themselves to as dependencies (think multi-user.target).
+graphical.target serves exactly the same purpose as the system-provided
+graphical.target: as well as starting cmdline.target, it starts a display
+server and any graphical services you choose to enable.
 
-2) Enable auto-logon/start user session at boot time (optional).
+The default target should be set by symlinking default.target to the
+target file you desire to be default. The links should be placed in
+${prefix}/systemd/user/ by distributions, in ${sysconfdir}/systemd/user/
+by SAs, and in ~/.config/systemd/user/ by individual users. The targets
+can also be automatically linked using `systemctl enable`.
+
+2) Choose your window manager, session manager, and autostarting services.
+
+graphical.target wants two services called window-manager.service and
+session-manager.service. These files should be symbolic links to the
+service files for your window manager and session manager, respectively.
+You may symlink these files manually as described above, or use `systemctl
+enable` to do it automatically.
+
+To make a service automatically start, use exactly the same process as
+you would for system units: either manually symlink the target to the
+appropriate .wants directory in the locations listed above or use
+`systemctl enable`.
+
+3) Enable auto-logon/start user session at boot time (optional).
 
 This should simply be done by the SA running: `systemctl enable
 user-session-launch@<insert seat>-<insert uid>.service`. However,

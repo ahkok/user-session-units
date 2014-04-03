@@ -1,7 +1,6 @@
-
 [Unit]
 Description=The GNOME session manager
-Requires=dislpay-server.target
+Requires=display-server.target
 After=display-server.target
 
 [Service]

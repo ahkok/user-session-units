@@ -20,7 +20,7 @@ user_session_launch_SOURCES = \
 
 # FIXME: add pkgconfig checks for these instead
 user_session_launch_LDADD = \
-	-lsystemd-login \
+	$(SYSTEMD_LIBS) \
 	-lpam \
 	-lpam_misc
 

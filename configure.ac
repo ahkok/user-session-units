@@ -17,6 +17,8 @@ AC_SUBST(SYSTEMDUSERUNITDIR)
 SYSTEMDUTILDIR="`$PKG_CONFIG --variable=systemdutildir systemd`"
 AC_SUBST(SYSTEMDUTILDIR)
 
+PKG_CHECK_MODULES([LIBSYSTEMD], [libsystemd >= 209])
+
 # test for xorg-launch-helper
 AC_MSG_CHECKING(for xorg-launch-helper)
 if test -f "$SYSTEMDUSERUNITDIR/xorg.target" ; then
